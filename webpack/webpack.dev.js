@@ -45,7 +45,7 @@ module.exports = async options =>
     devServer: {
       hot: true,
       static: {
-        directory: './dist/',
+        directory: './target/dist/',
       },
       port: 9060,
       proxy: [
@@ -96,7 +96,7 @@ module.exports = async options =>
         }
       ),
       new WebpackNotifierPlugin({
-        title: 'Monolithic',
+        title: 'webapp',
         contentImage: path.join(__dirname, 'logo-jhipster.png'),
       }),
     ].filter(Boolean),

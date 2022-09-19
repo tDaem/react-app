@@ -1,7 +1,7 @@
 node_modules/
 jest.conf.js
 webpack/
-dist/
+target/
 build/
 node/
 postcss.config.js
