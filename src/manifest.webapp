@@ -1,6 +1,6 @@
 {
-  "name": "Monolithic",
-  "short_name": "Monolithic",
+  "name": "React App",
+  "short_name": "React App",
   "icons": [
     {
       "src": "./content/images/jhipster_family_member_2_head-192.png",

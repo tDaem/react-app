@@ -17,7 +17,7 @@ module.exports = async options =>
     mode: ENV,
     entry: ['./src/app/index'],
     output: {
-      path: utils.root('dist/'),
+      path: utils.root('target/dist/'),
       filename: '[name].[contenthash:8].js',
       chunkFilename: '[name].[chunkhash:8].chunk.js',
     },

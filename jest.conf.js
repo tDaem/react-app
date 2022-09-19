@@ -6,8 +6,8 @@ module.exports = {
     '^.+\\.tsx?$': 'ts-jest',
   },
   testURL: 'http://localhost/',
-  cacheDirectory: '<rootDir>/test/jest-cache',
-  coverageDirectory: '<rootDir>/test/test-results/',
+  cacheDirectory: '<rootDir>/target/jest-cache',
+  coverageDirectory: '<rootDir>/target/test-results/',
   testMatch: ['<rootDir>/src/app/**/@(*.)@(spec.ts?(x))'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   moduleNameMapper: mapTypescriptAliasToJestAlias({
