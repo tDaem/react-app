@@ -1,20 +1,19 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import React from "react";
+import { render } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 
-import { AccountMenu } from './account';
+import { getLoginUrl } from "app/shared/util/url-utils";
+import { AccountMenu } from "./account";
 
-describe('AccountMenu', () => {
+describe("AccountMenu", () => {
   let mountedWrapper;
 
   const authenticatedWrapper = () => {
     if (!mountedWrapper) {
-      const history = createMemoryHistory();
       const { container } = render(
-        <Router history={history}>
+        <MemoryRouter>
           <AccountMenu isAuthenticated />
-        </Router>
+        </MemoryRouter>
       );
       mountedWrapper = container.innerHTML;
     }
@@ -22,11 +21,10 @@ describe('AccountMenu', () => {
   };
   const guestWrapper = () => {
     if (!mountedWrapper) {
-      const history = createMemoryHistory();
       const { container } = (mountedWrapper = render(
-        <Router history={history}>
+        <MemoryRouter>
           <AccountMenu />
-        </Router>
+        </MemoryRouter>
       ));
       mountedWrapper = container.innerHTML;
     }
@@ -39,17 +37,17 @@ describe('AccountMenu', () => {
 
   // All tests will go here
 
-  it('Renders a authenticated AccountMenu component', () => {
+  it("Renders a authenticated AccountMenu component", () => {
     const html = authenticatedWrapper();
 
-    expect(html).not.toContain('/login');
-    expect(html).toContain('/logout');
+    expect(html).not.toContain("/login");
+    expect(html).toContain("/logout");
   });
 
-  it('Renders a guest AccountMenu component', () => {
+  it("Renders a guest AccountMenu component", () => {
     const html = guestWrapper();
 
-    expect(html).toContain('/login');
-    expect(html).not.toContain('/logout');
+    expect(html).toContain(getLoginUrl());
+    expect(html).not.toContain("/logout");
   });
 });

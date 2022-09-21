@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 interface IErrorBoundaryProps {
-  readonly children: JSX.Element | JSX.Element[];
+  readonly children: React.ReactNode;
 }
 
 interface IErrorBoundaryState {
@@ -9,8 +9,14 @@ interface IErrorBoundaryState {
   readonly errorInfo: any;
 }
 
-class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBoundaryState> {
-  readonly state: IErrorBoundaryState = { error: undefined, errorInfo: undefined };
+class ErrorBoundary extends React.Component<
+  IErrorBoundaryProps,
+  IErrorBoundaryState
+> {
+  readonly state: IErrorBoundaryState = {
+    error: undefined,
+    errorInfo: undefined,
+  };
 
   componentDidCatch(error, errorInfo) {
     this.setState({

@@ -1,41 +1,41 @@
-const webpack = require('webpack');
-const webpackMerge = require('webpack-merge').merge;
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-const SimpleProgressWebpackPlugin = require('simple-progress-webpack-plugin');
-const WebpackNotifierPlugin = require('webpack-notifier');
-const path = require('path');
-const sass = require('sass');
+const webpack = require("webpack");
+const webpackMerge = require("webpack-merge").merge;
+const BrowserSyncPlugin = require("browser-sync-webpack-plugin");
+const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin");
+const WebpackNotifierPlugin = require("webpack-notifier");
+const path = require("path");
+const sass = require("sass");
 
-const utils = require('./utils.js');
-const commonConfig = require('./webpack.common.js');
+const utils = require("./utils.js");
+const commonConfig = require("./webpack.common.js");
 
-const ENV = 'development';
+const ENV = "development";
 
-module.exports = async options =>
+module.exports = async (options) =>
   webpackMerge(await commonConfig({ env: ENV }), {
-    devtool: 'cheap-module-source-map', // https://reactjs.org/docs/cross-origin-errors.html
+    devtool: "cheap-module-source-map", // https://reactjs.org/docs/cross-origin-errors.html
     mode: ENV,
-    entry: ['./src/app/index'],
+    entry: ["./src/app/index"],
     output: {
-      path: utils.root('target/dist/'),
-      filename: '[name].[contenthash:8].js',
-      chunkFilename: '[name].[chunkhash:8].chunk.js',
+      path: utils.root("target/dist/"),
+      filename: "[name].[contenthash:8].js",
+      chunkFilename: "[name].[chunkhash:8].chunk.js",
     },
     optimization: {
-      moduleIds: 'named',
+      moduleIds: "named",
     },
     module: {
       rules: [
         {
           test: /\.(sa|sc|c)ss$/,
           use: [
-            'style-loader',
-            'css-loader',
+            "style-loader",
+            "css-loader",
             {
-              loader: 'postcss-loader',
+              loader: "postcss-loader",
             },
             {
-              loader: 'sass-loader',
+              loader: "sass-loader",
               options: { implementation: sass },
             },
           ],
@@ -45,13 +45,22 @@ module.exports = async options =>
     devServer: {
       hot: true,
       static: {
-        directory: './target/dist/',
+        directory: "./target/dist/",
       },
       port: 9060,
       proxy: [
         {
-          context: ['/api', '/services', '/management', '/v3/api-docs', '/h2-console', '/auth'],
-          target: `http${options.tls ? 's' : ''}://localhost:8080`,
+          context: [
+            "/api",
+            "/services",
+            "/management",
+            "/v3/api-docs",
+            "/h2-console",
+            "/oauth2",
+            "/login",
+            "/auth",
+          ],
+          target: `http${options.tls ? "s" : ""}://localhost:8080`,
           secure: false,
           changeOrigin: options.tls,
         },
@@ -59,20 +68,22 @@ module.exports = async options =>
       https: options.tls,
       historyApiFallback: true,
     },
-    stats: process.env.JHI_DISABLE_WEBPACK_LOGS ? 'none' : options.stats,
+    stats: process.env.JHI_DISABLE_WEBPACK_LOGS ? "none" : options.stats,
     plugins: [
       process.env.JHI_DISABLE_WEBPACK_LOGS
         ? null
         : new SimpleProgressWebpackPlugin({
-            format: options.stats === 'minimal' ? 'compact' : 'expanded',
+            format: options.stats === "minimal" ? "compact" : "expanded",
           }),
       new BrowserSyncPlugin(
         {
           https: options.tls,
-          host: 'localhost',
+          host: "localhost",
           port: 9000,
           proxy: {
-            target: `http${options.tls ? 's' : ''}://localhost:${options.watch ? '8080' : '9060'}`,
+            target: `http${options.tls ? "s" : ""}://localhost:${
+              options.watch ? "8080" : "9060"
+            }`,
             ws: true,
             proxyOptions: {
               changeOrigin: false, //pass the Host header to the backend unchanged  https://github.com/Browsersync/browser-sync/issues/430
@@ -96,8 +107,8 @@ module.exports = async options =>
         }
       ),
       new WebpackNotifierPlugin({
-        title: 'webapp',
-        contentImage: path.join(__dirname, 'logo-jhipster.png'),
+        title: "React App",
+        contentImage: path.join(__dirname, "logo-jhipster.png"),
       }),
     ].filter(Boolean),
   });

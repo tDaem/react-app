@@ -1,11 +1,11 @@
-import React from 'react';
-import { Translate } from 'react-jhipster';
+import React from "react";
+import { Translate } from "react-jhipster";
 
-import { NavItem, NavLink, NavbarBrand } from 'reactstrap';
-import { NavLink as Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { NavItem, NavLink, NavbarBrand } from "reactstrap";
+import { NavLink as Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export const BrandIcon = props => (
+export const BrandIcon = (props) => (
   <div {...props} className="brand-icon">
     <img src="content/images/logo-jhipster.png" alt="Logo" />
   </div>
@@ -15,7 +15,7 @@ export const Brand = () => (
   <NavbarBrand tag={Link} to="/" className="brand-logo">
     <BrandIcon />
     <span className="brand-title">
-      <Translate contentKey="global.title">React App</Translate>
+      <Translate contentKey="global.title">ReactApp</Translate>
     </span>
     <span className="navbar-version">{VERSION}</span>
   </NavbarBrand>

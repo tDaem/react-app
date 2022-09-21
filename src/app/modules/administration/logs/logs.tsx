@@ -1,28 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { Translate } from 'react-jhipster';
+import React, { useState, useEffect } from "react";
+import { Translate } from "react-jhipster";
 
-import { getLoggers, changeLogLevel } from '../administration.reducer';
-import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { getLoggers, changeLogLevel } from "../administration.reducer";
+import { useAppDispatch, useAppSelector } from "app/config/store";
 
 export const LogsPage = () => {
-  const [filter, setFilter] = useState('');
-  const logs = useAppSelector(state => state.administration.logs);
-  const isFetching = useAppSelector(state => state.administration.loading);
+  const [filter, setFilter] = useState("");
+  const logs = useAppSelector((state) => state.administration.logs);
+  const isFetching = useAppSelector((state) => state.administration.loading);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getLoggers());
   }, []);
 
-  const changeLevel = (loggerName, level) => () => dispatch(changeLogLevel(loggerName, level));
+  const changeLevel = (loggerName, level) => () =>
+    dispatch(changeLogLevel(loggerName, level));
 
-  const changeFilter = evt => setFilter(evt.target.value);
+  const changeFilter = (evt) => setFilter(evt.target.value);
 
-  const getClassName = (level, check, className) => (level === check ? `btn btn-sm btn-${className}` : 'btn btn-sm btn-light');
+  const getClassName = (level, check, className) =>
+    level === check ? `btn btn-sm btn-${className}` : "btn btn-sm btn-light";
 
-  const filterFn = l => l.name.toUpperCase().includes(filter.toUpperCase());
+  const filterFn = (l) => l.name.toUpperCase().includes(filter.toUpperCase());
 
-  const loggers = logs ? Object.entries(logs.loggers).map((e: any) => ({ name: e[0], level: e[1].effectiveLevel })) : [];
+  const loggers = logs
+    ? Object.entries(logs.loggers).map((e: any) => ({
+        name: e[0],
+        level: e[1].effectiveLevel,
+      }))
+    : [];
 
   return (
     <div>
@@ -30,7 +37,10 @@ export const LogsPage = () => {
         <Translate contentKey="logs.title">Logs</Translate>
       </h2>
       <p>
-        <Translate contentKey="logs.nbloggers" interpolate={{ total: loggers.length }}>
+        <Translate
+          contentKey="logs.nbloggers"
+          interpolate={{ total: loggers.length }}
+        >
           There are {loggers.length.toString()} loggers.
         </Translate>
       </p>
@@ -38,9 +48,18 @@ export const LogsPage = () => {
       <span>
         <Translate contentKey="logs.filter">Filter</Translate>
       </span>
-      <input type="text" value={filter} onChange={changeFilter} className="form-control" disabled={isFetching} />
+      <input
+        type="text"
+        value={filter}
+        onChange={changeFilter}
+        className="form-control"
+        disabled={isFetching}
+      />
 
-      <table className="table table-sm table-striped table-bordered" aria-describedby="logs-page-heading">
+      <table
+        className="table table-sm table-striped table-bordered"
+        aria-describedby="logs-page-heading"
+      >
         <thead>
           <tr title="click to order">
             <th>
@@ -64,43 +83,43 @@ export const LogsPage = () => {
               <td>
                 <button
                   disabled={isFetching}
-                  onClick={changeLevel(logger.name, 'TRACE')}
-                  className={getClassName(logger.level, 'TRACE', 'primary')}
+                  onClick={changeLevel(logger.name, "TRACE")}
+                  className={getClassName(logger.level, "TRACE", "primary")}
                 >
                   TRACE
                 </button>
                 <button
                   disabled={isFetching}
-                  onClick={changeLevel(logger.name, 'DEBUG')}
-                  className={getClassName(logger.level, 'DEBUG', 'success')}
+                  onClick={changeLevel(logger.name, "DEBUG")}
+                  className={getClassName(logger.level, "DEBUG", "success")}
                 >
                   DEBUG
                 </button>
                 <button
                   disabled={isFetching}
-                  onClick={changeLevel(logger.name, 'INFO')}
-                  className={getClassName(logger.level, 'INFO', 'info')}
+                  onClick={changeLevel(logger.name, "INFO")}
+                  className={getClassName(logger.level, "INFO", "info")}
                 >
                   INFO
                 </button>
                 <button
                   disabled={isFetching}
-                  onClick={changeLevel(logger.name, 'WARN')}
-                  className={getClassName(logger.level, 'WARN', 'warning')}
+                  onClick={changeLevel(logger.name, "WARN")}
+                  className={getClassName(logger.level, "WARN", "warning")}
                 >
                   WARN
                 </button>
                 <button
                   disabled={isFetching}
-                  onClick={changeLevel(logger.name, 'ERROR')}
-                  className={getClassName(logger.level, 'ERROR', 'danger')}
+                  onClick={changeLevel(logger.name, "ERROR")}
+                  className={getClassName(logger.level, "ERROR", "danger")}
                 >
                   ERROR
                 </button>
                 <button
                   disabled={isFetching}
-                  onClick={changeLevel(logger.name, 'OFF')}
-                  className={getClassName(logger.level, 'OFF', 'secondary')}
+                  onClick={changeLevel(logger.name, "OFF")}
+                  className={getClassName(logger.level, "OFF", "secondary")}
                 >
                   OFF
                 </button>

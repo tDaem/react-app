@@ -1,28 +1,28 @@
-const path = require('path');
-const webpack = require('webpack');
-const { merge } = require('webpack-merge');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
-const { hashElement } = require('folder-hash');
-const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
-const utils = require('./utils.js');
-const environment = require('./environment');
+const path = require("path");
+const webpack = require("webpack");
+const { merge } = require("webpack-merge");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const ESLintPlugin = require("eslint-webpack-plugin");
+const { hashElement } = require("folder-hash");
+const MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin");
+const utils = require("./utils.js");
+const environment = require("./environment");
 
-const getTsLoaderRule = env => {
+const getTsLoaderRule = (env) => {
   const rules = [
     {
-      loader: 'thread-loader',
+      loader: "thread-loader",
       options: {
         // There should be 1 cpu for the fork-ts-checker-webpack-plugin.
         // The value may need to be adjusted (e.g. to 1) in some CI environments,
         // as cpus() may report more cores than what are available to the build.
-        workers: require('os').cpus().length - 1,
+        workers: require("os").cpus().length - 1,
       },
     },
     {
-      loader: 'ts-loader',
+      loader: "ts-loader",
       options: {
         transpileOnly: true,
         happyPackMode: true,
@@ -32,38 +32,44 @@ const getTsLoaderRule = env => {
   return rules;
 };
 
-module.exports = async options => {
-  const development = options.env === 'development';
-  const languagesHash = await hashElement(path.resolve(__dirname, '../src/i18n'), {
-    algo: 'md5',
-    encoding: 'hex',
-    files: { include: ['*.json'] },
-  });
+module.exports = async (options) => {
+  const development = options.env === "development";
+  const languagesHash = await hashElement(
+    path.resolve(__dirname, "../src/i18n"),
+    {
+      algo: "md5",
+      encoding: "hex",
+      files: { include: ["*.json"] },
+    }
+  );
 
   return merge(
     {
       cache: {
         // 1. Set cache type to filesystem
-        type: 'filesystem',
-        cacheDirectory: path.resolve(__dirname, '../target/webpack'),
+        type: "filesystem",
+        cacheDirectory: path.resolve(__dirname, "../target/webpack"),
         buildDependencies: {
           // 2. Add your config as buildDependency to get cache invalidation on config change
           config: [
             __filename,
-            path.resolve(__dirname, `webpack.${development ? 'dev' : 'prod'}.js`),
-            path.resolve(__dirname, 'environment.js'),
-            path.resolve(__dirname, 'utils.js'),
-            path.resolve(__dirname, '../postcss.config.js'),
-            path.resolve(__dirname, '../tsconfig.json'),
+            path.resolve(
+              __dirname,
+              `webpack.${development ? "dev" : "prod"}.js`
+            ),
+            path.resolve(__dirname, "environment.js"),
+            path.resolve(__dirname, "utils.js"),
+            path.resolve(__dirname, "../postcss.config.js"),
+            path.resolve(__dirname, "../tsconfig.json"),
           ],
         },
       },
       resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
-        modules: ['node_modules'],
+        extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
+        modules: ["node_modules"],
         alias: utils.mapTypescriptAliasToWebpackAlias(),
         fallback: {
-          path: require.resolve('path-browserify'),
+          path: require.resolve("path-browserify"),
         },
       },
       module: {
@@ -71,8 +77,8 @@ module.exports = async options => {
           {
             test: /\.tsx?$/,
             use: getTsLoaderRule(options.env),
-            include: [utils.root('./src/app')],
-            exclude: [utils.root('node_modules')],
+            include: [utils.root("./src/app")],
+            exclude: [utils.root("node_modules")],
           },
           /*
        ,
@@ -92,7 +98,7 @@ module.exports = async options => {
       plugins: [
         new webpack.EnvironmentPlugin({
           // react-jhipster requires LOG_LEVEL config.
-          LOG_LEVEL: development ? 'info' : 'error',
+          LOG_LEVEL: development ? "info" : "error",
         }),
         new webpack.DefinePlugin({
           I18N_HASH: JSON.stringify(languagesHash.hash),
@@ -101,41 +107,48 @@ module.exports = async options => {
           SERVER_API_URL: JSON.stringify(environment.SERVER_API_URL),
         }),
         new ESLintPlugin({
-          extensions: ['js', 'ts', 'jsx', 'tsx'],
+          baseConfig: {
+            parserOptions: {
+              project: ["../tsconfig.json"],
+            },
+          },
         }),
         new ForkTsCheckerWebpackPlugin(),
         new CopyWebpackPlugin({
           patterns: [
             {
               // https://github.com/swagger-api/swagger-ui/blob/v4.6.1/swagger-ui-dist-package/README.md
-              context: require('swagger-ui-dist').getAbsoluteFSPath(),
-              from: '*.{js,css,html,png}',
-              to: 'swagger-ui/',
-              globOptions: { ignore: ['**/index.html'] },
+              context: require("swagger-ui-dist").getAbsoluteFSPath(),
+              from: "*.{js,css,html,png}",
+              to: "swagger-ui/",
+              globOptions: { ignore: ["**/index.html"] },
             },
             {
-              from: require.resolve('axios/dist/axios.min.js'),
-              to: 'swagger-ui/',
+              from: require.resolve("axios/dist/axios.min.js"),
+              to: "swagger-ui/",
             },
-            { from: './src/swagger-ui/', to: 'swagger-ui/' },
-            { from: './src/content/', to: 'content/' },
-            { from: './src/favicon.ico', to: 'favicon.ico' },
-            { from: './src/manifest.webapp', to: 'manifest.webapp' },
+            { from: "./src/swagger-ui/", to: "swagger-ui/" },
+            { from: "./src/content/", to: "content/" },
+            { from: "./src/favicon.ico", to: "favicon.ico" },
+            { from: "./src/manifest.webapp", to: "manifest.webapp" },
             // jhipster-needle-add-assets-to-webpack - JHipster will add/remove third-party resources in this array
-            { from: './src/robots.txt', to: 'robots.txt' },
+            { from: "./src/robots.txt", to: "robots.txt" },
           ],
         }),
         new HtmlWebpackPlugin({
-          template: './src/index.html',
-          chunksSortMode: 'auto',
-          inject: 'body',
-          base: '/',
+          template: "./src/index.html",
+          chunksSortMode: "auto",
+          inject: "body",
+          base: "/",
         }),
         new MergeJsonWebpackPlugin({
           output: {
             groupBy: [
-              { pattern: './src/i18n/zh-cn/*.json', fileName: './i18n/zh-cn.json' },
-              { pattern: './src/i18n/en/*.json', fileName: './i18n/en.json' },
+              {
+                pattern: "./src/i18n/zh-cn/*.json",
+                fileName: "./i18n/zh-cn.json",
+              },
+              { pattern: "./src/i18n/en/*.json", fileName: "./i18n/en.json" },
               // jhipster-needle-i18n-language-webpack - JHipster will add/remove languages in this array
             ],
           },

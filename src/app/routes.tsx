@@ -1,36 +1,53 @@
-import React from 'react';
-import { Switch } from 'react-router-dom';
-import Loadable from 'react-loadable';
+import React from "react";
+import { Route } from "react-router-dom";
+import Loadable from "react-loadable";
 
-import Login from 'app/modules/login/login';
-import Logout from 'app/modules/login/logout';
-import Home from 'app/modules/home/home';
-import EntitiesRoutes from 'app/entities/routes';
-import PrivateRoute from 'app/shared/auth/private-route';
-import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
-import PageNotFound from 'app/shared/error/page-not-found';
-import { AUTHORITIES } from 'app/config/constants';
+import LoginRedirect from "app/modules/login/login-redirect";
+import Logout from "app/modules/login/logout";
+import Home from "app/modules/home/home";
+import EntitiesRoutes from "app/entities/routes";
+import PrivateRoute from "app/shared/auth/private-route";
+import ErrorBoundaryRoutes from "app/shared/error/error-boundary-routes";
+import PageNotFound from "app/shared/error/page-not-found";
+import { AUTHORITIES } from "app/config/constants";
 
 const loading = <div>loading ...</div>;
 
 const Admin = Loadable({
-  loader: () => import(/* webpackChunkName: "administration" */ 'app/modules/administration'),
+  loader: () =>
+    import(
+      /* webpackChunkName: "administration" */ "app/modules/administration"
+    ),
   loading: () => loading,
 });
 
-const Routes = () => {
+const AppRoutes = () => {
   return (
     <div className="view-routes">
-      <Switch>
-        <ErrorBoundaryRoute path="/login" component={Login} />
-        <ErrorBoundaryRoute path="/logout" component={Logout} />
-        <PrivateRoute path="/admin" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN]} />
-        <ErrorBoundaryRoute path="/" exact component={Home} />
-        <PrivateRoute path="/" component={EntitiesRoutes} hasAnyAuthorities={[AUTHORITIES.USER]} />
-        <ErrorBoundaryRoute component={PageNotFound} />
-      </Switch>
+      <ErrorBoundaryRoutes>
+        <Route index element={<Home />} />
+        <Route path="logout" element={<Logout />} />
+        <Route
+          path="admin/*"
+          element={
+            <PrivateRoute hasAnyAuthorities={[AUTHORITIES.ADMIN]}>
+              <Admin />
+            </PrivateRoute>
+          }
+        />
+        <Route path="oauth2/authorization/oidc" element={<LoginRedirect />} />
+        <Route
+          path="*"
+          element={
+            <PrivateRoute hasAnyAuthorities={[AUTHORITIES.USER]}>
+              <EntitiesRoutes />
+            </PrivateRoute>
+          }
+        />
+        <Route path="*" element={<PageNotFound />} />
+      </ErrorBoundaryRoutes>
     </div>
   );
 };
 
-export default Routes;
+export default AppRoutes;

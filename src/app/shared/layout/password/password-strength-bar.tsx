@@ -1,14 +1,16 @@
-import './password-strength-bar.scss';
+import "./password-strength-bar.scss";
 
-import React from 'react';
-import { Translate } from 'react-jhipster';
+import React from "react";
+import { Translate } from "react-jhipster";
 
 export interface IPasswordStrengthBarProps {
   password: string;
 }
 
-export const PasswordStrengthBar = ({ password }: IPasswordStrengthBarProps) => {
-  const colors = ['#F00', '#F90', '#FF0', '#9F0', '#0F0'];
+export const PasswordStrengthBar = ({
+  password,
+}: IPasswordStrengthBarProps) => {
+  const colors = ["#F00", "#F90", "#FF0", "#9F0", "#0F0"];
 
   const measureStrength = (p: string): number => {
     let force = 0;
@@ -20,7 +22,9 @@ export const PasswordStrengthBar = ({ password }: IPasswordStrengthBarProps) => 
       symbols: regex.test(p),
     };
 
-    const passedMatches = Object.values(flags).filter((isMatchedFlag: boolean) => !!isMatchedFlag).length;
+    const passedMatches = Object.values(flags).filter(
+      (isMatchedFlag: boolean) => !!isMatchedFlag
+    ).length;
 
     force += 2 * p.length + (p.length >= 10 ? 1 : 0);
     force += passedMatches * 10;
@@ -52,10 +56,20 @@ export const PasswordStrengthBar = ({ password }: IPasswordStrengthBarProps) => 
     return { idx: idx + 1, col: colors[idx] };
   };
 
-  const getPoints = force => {
+  const getPoints = (force) => {
     const pts = [] as any[];
     for (let i = 0; i < 5; i++) {
-      pts.push(<li key={i} className="point" style={i < force.idx ? { backgroundColor: force.col } : { backgroundColor: '#DDD' }} />);
+      pts.push(
+        <li
+          key={i}
+          className="point"
+          style={
+            i < force.idx
+              ? { backgroundColor: force.col }
+              : { backgroundColor: "#DDD" }
+          }
+        />
+      );
     }
     return pts;
   };
@@ -66,7 +80,9 @@ export const PasswordStrengthBar = ({ password }: IPasswordStrengthBarProps) => 
   return (
     <div id="strength">
       <small>
-        <Translate contentKey="global.messages.validate.newpassword.strength">Password strength:</Translate>
+        <Translate contentKey="global.messages.validate.newpassword.strength">
+          Password strength:
+        </Translate>
       </small>
       <ul id="strengthBar">{points}</ul>
     </div>

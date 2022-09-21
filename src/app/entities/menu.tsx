@@ -1,7 +1,7 @@
-import React from 'react';
-import { Translate } from 'react-jhipster';
+import React from "react";
+import { Translate } from "react-jhipster";
 
-import MenuItem from 'app/shared/layout/menus/menu-item';
+import MenuItem from "app/shared/layout/menus/menu-item";
 
 const EntitiesMenu = () => {
   return (
@@ -12,4 +12,4 @@ const EntitiesMenu = () => {
   );
 };
 
-export default EntitiesMenu as React.ComponentType<any>;
+export default EntitiesMenu;

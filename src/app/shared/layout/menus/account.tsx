@@ -1,7 +1,10 @@
-import React from 'react';
-import MenuItem from 'app/shared/layout/menus/menu-item';
-import { Translate, translate } from 'react-jhipster';
-import { NavDropdown } from './menu-components';
+import React from "react";
+import MenuItem from "app/shared/layout/menus/menu-item";
+import { DropdownItem } from "reactstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Translate, translate } from "react-jhipster";
+import { getLoginUrl } from "app/shared/util/url-utils";
+import { NavDropdown } from "./menu-components";
 
 const accountMenuItemsAuthenticated = () => (
   <>
@@ -13,14 +16,20 @@ const accountMenuItemsAuthenticated = () => (
 
 const accountMenuItems = () => (
   <>
-    <MenuItem id="login-item" icon="sign-in-alt" to="/login" data-cy="login">
+    <DropdownItem id="login-item" tag="a" href={getLoginUrl()} data-cy="login">
+      <FontAwesomeIcon icon="sign-in-alt" />{" "}
       <Translate contentKey="global.menu.account.login">Sign in</Translate>
-    </MenuItem>
+    </DropdownItem>
   </>
 );
 
 export const AccountMenu = ({ isAuthenticated = false }) => (
-  <NavDropdown icon="user" name={translate('global.menu.account.main')} id="account-menu" data-cy="accountMenu">
+  <NavDropdown
+    icon="user"
+    name={translate("global.menu.account.main")}
+    id="account-menu"
+    data-cy="accountMenu"
+  >
     {isAuthenticated ? accountMenuItemsAuthenticated() : accountMenuItems()}
   </NavDropdown>
 );
